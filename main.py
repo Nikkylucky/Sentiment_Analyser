@@ -14,15 +14,24 @@ stop_words = get_stop_words('english')
 stopwords = set(stop_words)
 
 def test_message(message):
+    message = message.replace("@", " ")
+    message = message.replace("#", " ")
+    message = message.replace("RT", " ")
+    message = message.replace(":", " ") 
+    message = message.replace(";", " ")
+    message = message.replace("!", " ")
+    message = message.replace("?", " ")
+    message = message.replace(",", " ")
+    message = message.replace(".", " ")
     message = str(message)
-    message = message.lower()
-    message = message.replace('[^a-zA-Z]', ' ')
-    message = message.split()
-    message = [word for word in message if not word in stopwords]
-    message = ' '.join(message)
-    message = [message]
-    message = cv.transform(message).toarray()
-    return model.predict(message)
+    message = message.lower() # convert all the text to lower case
+    message = message.replace('[^a-zA-Z]', ' ') # remove special characters and numbers from the text
+    message = message.split() # split the text into a list of words
+    message = [word for word in message if not word in stopwords] # remove stopwords from the list of words 
+    message = ' '.join(message) # join the list of words into a sentence
+    message = [message] # convert the sentence into a list
+    message = cv.transform(message).toarray() # convert the list into an array
+    return model.predict(message) # predict the sentiment of the text
 
 model = joblib.load('./finalized_Sentiment_Model.sav')
 cv = pickle.load(open('./vectorizer.pkl', 'rb'))
